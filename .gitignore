@@ -24,3 +24,4 @@ hs_err_pid*
 # Esses tambem acho que nao precisam estar no git
 .classpath
 .project
+/bin/
