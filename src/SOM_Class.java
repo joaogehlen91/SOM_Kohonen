@@ -1,3 +1,6 @@
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Random;
 
 
@@ -6,22 +9,23 @@ public class SOM_Class {
 	private double w[][];
 	private int nClusters;
 	private int vecLen;
-	private int iterationLimit;
 	private double d[];           //Network nodes.
 	
 	
+	//About 100 iterations.
 	private static double alpha = 0.6;
-	private static final double DECAY_RATE = 0.1;                  //About 100 iterations.
+	private static final double DECAY_RATE = 0.993;
+	
+	
 	private static final double MIN_ALPHA = 0.01;
 	private static final double RADIUS_REDUCTION_POINT = 0.023;     //Last 20% of iterations.
 	
-	private static final int VEC_XLEN = 1;
+	private static final int VEC_XLEN = 100;
 	private static final int VEC_YLEN = 1;
 	
-	public SOM_Class(int nClusters, int iterationLimit, int input_set[][]){
+	public SOM_Class(int nClusters, int input_set[][]){
 		this.nClusters = nClusters;
 		this.input_set = input_set;
-		this.iterationLimit = iterationLimit;
 		this.d = new double[nClusters];
 		this.vecLen = input_set[0].length;
 		w = criaMatrizAleatorio(this.nClusters, this.input_set[0].length);
@@ -149,7 +153,7 @@ public class SOM_Class {
 		    for(int i = 0; i < this.vecLen; i++)
 		    {
 		        // Only include neighbors before radius reduction point is reached.
-		        if(alpha > RADIUS_REDUCTION_POINT){
+		        //if(alpha > RADIUS_REDUCTION_POINT){
 		            y = 1;
 		            while(!done)
 		            {
@@ -203,10 +207,10 @@ public class SOM_Class {
 		                y += 1; // prepare to start the next row.
 
 		            }
-		        }else if(alpha <= RADIUS_REDUCTION_POINT){
+		        /*}else if(alpha <= RADIUS_REDUCTION_POINT){
 		            // Update only the winner.
 		            w[dMin][i] = w[dMin][i] + (alpha * (this.input_set[vectorNumber][i] - w[dMin][i]));
-		        }
+		        }*/
 
 		    } // i
 			return;
@@ -262,11 +266,12 @@ public class SOM_Class {
 		            computeInput(this.input_set[vecNum]);
 		
 		            //See which is smaller.
+		            //Arrays.sort(d);
 		            dMin = minimum(d);
 		
 		            System.out.print("\nVector (");
 		            System.out.print("Pattern " + vecNum + ", " /*+ names[vecNum]*/);
-		            System.out.print(") fits into category " + dMin + "\n");
+		            System.out.print(") fits into category " + dMin + "w" + d[dMin]+"\n");
 		
 		        } // VecNum
 		    	
@@ -284,5 +289,7 @@ public class SOM_Class {
 		        //    System.out.println("\n");
 		        //} // i
 
-	    }	
+	    }
+
+		
 }

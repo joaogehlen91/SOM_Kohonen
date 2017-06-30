@@ -5,11 +5,7 @@ import java.util.ArrayList;
 
 public class SOM_Kohonen {
 	
-	public static final int MAX_ITER = 50;
-	public static final int MAX_CLUSTERS = 10;
-	public static final int VEC_LEN = 1024;
-	public static final double DECAY_RATE = 0.96;
-	public static final double MIN_ALPHA = 0.01;
+	public static final int MAX_CLUSTERS = 100;
 	public static final double TEST_SIZE = 0.5;  //porcentagem do arquivo de entrada utilizada para testes
 	
 	public static void main(String[] args) throws IOException {
@@ -74,7 +70,7 @@ public class SOM_Kohonen {
 		}*/
 		
 
-		SOM_Class som = new SOM_Class(MAX_CLUSTERS, MAX_ITER, input_num);
+		SOM_Class som = new SOM_Class(MAX_CLUSTERS, input_num);
 		som.train();
 		som.printResults();
 		/*som.Train(input_train, input_test);
