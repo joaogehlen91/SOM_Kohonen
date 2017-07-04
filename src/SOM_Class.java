@@ -1,8 +1,14 @@
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Random;
-
 
 public class SOM_Class {
 	private int input_set[][];
@@ -15,13 +21,11 @@ public class SOM_Class {
 	//About 100 iterations.
 	private static double alpha = 0.6;
 	private static final double DECAY_RATE = 0.993;
-	
-	
 	private static final double MIN_ALPHA = 0.01;
 	private static final double RADIUS_REDUCTION_POINT = 0.023;     //Last 20% of iterations.
 	
-	private static final int VEC_XLEN = 100;
-	private static final int VEC_YLEN = 1;
+	private static final int VEC_XLEN = 10;
+	private static final int VEC_YLEN = 10;
 	
 	public SOM_Class(int nClusters, int input_set[][]){
 		this.nClusters = nClusters;
@@ -95,12 +99,10 @@ public class SOM_Class {
 	    int reductionPoint = 0;
 	    int dMin = 0;
 	    
-	    while(alpha > MIN_ALPHA)
-	    {
+	    while(alpha > MIN_ALPHA){
 	        iterations += 1;
 
-	        for(int vecNum = 0; vecNum < this.input_set.length; vecNum++)
-	        {
+	        for(int vecNum = 0; vecNum < this.input_set.length; vecNum++){
 	            //Compute input for all nodes.
 	            computeInput(this.input_set[vecNum]);
 
@@ -125,14 +127,12 @@ public class SOM_Class {
 	    }
 
 	    System.out.println("Iterations: " + iterations);
-		
 	    System.out.println("Neighborhood radius reduced after " + reductionPoint + " iterations.");
 		
 		return;
 	}
 	
-	 private void computeInput(int[] vectorArray)
-		{
+	 private void computeInput(int[] vectorArray){
 			clearArray(d);
 
 		    for(int i = 0; i <= (this.nClusters - 1); i++){
@@ -143,20 +143,17 @@ public class SOM_Class {
 			return;
 		}
 	    
-	    private void updateWeights(int vectorNumber, int dMin)
-		{
+	    private void updateWeights(int vectorNumber, int dMin){
 	    	int y = 0;
 	    	int PointA = 0;
 	    	int PointB = 0;
 	    	boolean done = false;
 
-		    for(int i = 0; i < this.vecLen; i++)
-		    {
+		    for(int i = 0; i < this.vecLen; i++){
 		        // Only include neighbors before radius reduction point is reached.
 		        //if(alpha > RADIUS_REDUCTION_POINT){
 		            y = 1;
-		            while(!done)
-		            {
+		            while(!done){
 		                if(y == 1){                                   // Top row of 3.
 		                    if(dMin > VEC_XLEN - 1){
 		                        PointA = dMin - VEC_XLEN - 1;
@@ -180,8 +177,7 @@ public class SOM_Class {
 		                }
 
 		                if(!done){
-		                    for(int DIndex = PointA; DIndex < PointB; DIndex++)
-		                    {
+		                    for(int DIndex = PointA; DIndex < PointB; DIndex++){
 		                        // Check if anchor is at left side.
 		                        if(dMin % VEC_XLEN == 0){
 		                            // Check if anchor is at top.
@@ -216,26 +212,21 @@ public class SOM_Class {
 			return;
 		}
 	    
-	    private void clearArray(double[] nodeArray)
-		{
-			for(int i = 0; i <this.nClusters; i++)
-		    {
+	    private void clearArray(double[] nodeArray){
+			for(int i = 0; i <this.nClusters; i++){
 		        nodeArray[i] = 0.0;
 		    } // i
 			return;
 		}
 	    
-	    private int minimum(double[] nodeArray)
-		{
+	    private int minimum(double[] nodeArray){
 			int winner = 0;
 		    boolean foundNewWinner = false;
 		    boolean done = false;
 
-		    while(!done)
-		    {
+		    while(!done){
 		        foundNewWinner = false;
-		        for(int i = 0; i <this.nClusters; i++)
-		        {
+		        for(int i = 0; i <this.nClusters; i++){
 		            if(i != winner){             //Avoid self-comparison.
 		                if(nodeArray[i] < nodeArray[winner]){
 		                    winner = i;
@@ -252,28 +243,61 @@ public class SOM_Class {
 		}
 
 	    
-	    public void printResults()
-	    {
+	    public void printResults(){
 		    //int i = 0;
 		    //int j = 0;
 		    int dMin = 0;
-		
+
+		    //double aux[] = null;
+		    //ArrayList<Integer> pos = new ArrayList<Integer> ();
+		    
+		    Map<Double,Integer> map_cluster = new HashMap<Double,Integer>();
+		    Map<Integer,Double> map_distancia = new HashMap<Integer,Double>();
+	        
+		   
 		    //Print clusters created.
 		        System.out.println("Clusters for training input:");
-		        for(int vecNum = 0; vecNum < this.input_set.length; vecNum++)
-		        {
+		        for(int vecNum = 0; vecNum < this.input_set.length; vecNum++){
 		            //Compute input.
 		            computeInput(this.input_set[vecNum]);
 		
-		            //See which is smaller.
+		            
 		            //Arrays.sort(d);
+		            //See which is smaller.
 		            dMin = minimum(d);
+		            
+		            //pos.add(dMin);
+		            map_cluster.put(d[dMin], dMin);
+		            map_distancia.put(vecNum+1, d[dMin]);
 		
 		            System.out.print("\nVector (");
 		            System.out.print("Pattern " + vecNum + ", " /*+ names[vecNum]*/);
-		            System.out.print(") fits into category " + dMin + "w" + d[dMin]+"\n");
+		            System.out.print(") fits into category " + dMin + " w: " + d[dMin]+"\n");
 		
 		        } // VecNum
+		        
+		        //System.arraycopy( d, 0, aux, 0, d.length );
+		        //aux = d.clone();
+		        //Arrays.sort(aux);
+		        
+		        Map<Integer,Double> sorted_map = new HashMap<Integer,Double>();
+		        sorted_map = sortHashMapByValues(map_distancia);
+		        
+		        try{
+		            PrintWriter writer = new PrintWriter("arquivos/result.txt", "UTF-8");
+		            
+		            for (Map.Entry<Integer,Double> entry : sorted_map.entrySet()) {
+		            	  Integer key = entry.getKey();
+		            	  Double value = entry.getValue();
+		            	  Integer cluster = getKeyFromValue(map_cluster, value);
+		            	  writer.println("Distacia = " + value + " Cluster = " + cluster +  " Entrada(1 a 1934) = " + key );
+		            }
+		            writer.close();
+		        } catch (IOException e) {}
+		        
+		    	//for (int i=0; i < aux.length; i++) System.out.println("Cluster[" + i + "]=" + aux[i]);
+		    	//for (Integer integer : pos)  System.out.println(integer);
+
 		    	
 		    	//The weight matrix is HUGE, and I'd found the output easier to read just by commenting out that part...
 		        //Print weight matrix.
@@ -290,6 +314,45 @@ public class SOM_Class {
 		        //} // i
 
 	    }
+	    
+	    // Ordena HashMap
+	    public LinkedHashMap<Integer, Double> sortHashMapByValues(
+	        Map<Integer, Double> sorted_map) {
+	    	ArrayList<Integer> mapKeys = new ArrayList<>(sorted_map.keySet());
+	    	ArrayList<Double> mapValues = new ArrayList<>(sorted_map.values());
+	        Collections.sort(mapValues);
+	        Collections.sort(mapKeys);
 
+	        LinkedHashMap<Integer, Double> sortedMap = new LinkedHashMap<>();
+
+	        Iterator<Double> valueIt = mapValues.iterator();
+	        while (valueIt.hasNext()) {
+	        	Double val = valueIt.next();
+	            Iterator<Integer> keyIt = mapKeys.iterator();
+
+	            while (keyIt.hasNext()) {
+	                Integer key = keyIt.next();
+	                Double comp1 = sorted_map.get(key);
+	                Double comp2 = val;
+
+	                if (comp1.equals(comp2)) {
+	                    keyIt.remove();
+	                    sortedMap.put(key, val);
+	                    break;
+	                }
+	            }
+	        }
+	        return sortedMap;
+	    }
+
+	    public Integer getKeyFromValue(Map<Double, Integer> hm, Double value) {      
+            for (Map.Entry<Double,Integer> entry : hm.entrySet()) {
+            	
+          	  if( Double.compare(entry.getKey(), value) == 0 ){
+          		  return entry.getValue();
+          	  }
+            }
+	        return null;
+	   }
 		
 }
