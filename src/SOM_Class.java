@@ -23,7 +23,7 @@ public class SOM_Class {
 	private static double alpha = 0.6;
 	private static final double DECAY_RATE = 0.993;
 	private static final double MIN_ALPHA = 0.01;
-	private static final double RADIUS_REDUCTION_POINT = 0.063; // Last 20% of
+	private static final double RADIUS_REDUCTION_POINT = 0.033; // Last 20% of
 																// iterations.
 
 	private static final int VEC_XLEN = 10;
@@ -105,7 +105,7 @@ public class SOM_Class {
 
 		while (alpha > MIN_ALPHA) {
 			iterations += 1;
-			System.out.println("Iterations: " + iterations+"alpha: "+ alpha );
+			//System.out.println("Iterations: " + iterations+"alpha: "+ alpha );
 
 			for (int vecNum = 0; vecNum < this.input_set.length; vecNum++) {
 				// Compute input for all nodes.
@@ -140,10 +140,13 @@ public class SOM_Class {
 
 	private void computeInput(int[] vectorArray) {
 		clearArray(d);
-
+		double x=0;
 		for (int i = 0; i <= (this.nClusters - 1); i++) {
 			for (int j = 0; j <= (this.vecLen - 1); j++) {
-				d[i] += Math.pow((w[i][j] - vectorArray[j]), 2);
+				//d[i] += Math.pow((w[i][j] - vectorArray[j]), 2);
+				x = (w[i][j] - vectorArray[j]);
+				d[i] += x*x ;
+				
 			} // j
 		} // i
 		return;
