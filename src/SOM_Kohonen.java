@@ -11,7 +11,7 @@ public class SOM_Kohonen {
 	public static void main(String[] args) throws IOException {
 		
 		ArrayList<ArrayList<Integer>> input = new ArrayList<ArrayList<Integer>>();
-		String fileName = "arquivos/training";
+		String fileName = "arquivos/cp_tra";
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		String linha;
 		String numero = "";
