@@ -5,13 +5,17 @@ import java.util.ArrayList;
 
 public class SOM_Kohonen {
 	
-	public static final int MAX_CLUSTERS = 100;
-	public static final double TEST_SIZE = 0.5;  //porcentagem do arquivo de entrada utilizada para testes
+	public static final int DIM_MATRIZ_NEURONIOS = 15;
+	public static final int MAX_EPOCAS = 20;
+	public static final double TEST_SIZE = 0.2;
+	public static final double TAXA_APRENDIZAGEM = 0.1;
+	public static final double RAIO = 0.9;
 	
 	public static void main(String[] args) throws IOException {
 		
 		ArrayList<ArrayList<Integer>> input = new ArrayList<ArrayList<Integer>>();
-		String fileName = "arquivos/cp_tra";
+		ArrayList<String> input_labels = new ArrayList<String>();
+		String fileName = "arquivos/training";
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
 		String linha;
 		String numero = "";
@@ -23,6 +27,7 @@ public class SOM_Kohonen {
 				numero += linha;
 			}
 			if(linha.length() != 32 && numero != ""){
+				input_labels.add(linha.replace(" ",""));
 				ArrayList<Integer> num = new ArrayList<Integer>();
 				for (String s : numero.split("")) {
 					num.add(Integer.parseInt(s));
@@ -47,35 +52,31 @@ public class SOM_Kohonen {
 			i++;
 		}
 		
-//		int limit = (int) (input_num.length*TEST_SIZE);
-//		System.out.println(limit);
-//		System.out.println(input_num.length-limit);
-//		int[][] input_train = new int[input_num.length-limit][VEC_LEN];
-//		int[][] input_test = new int[limit][VEC_LEN];
-//		
-//		for(int x=0; x<limit; x++)
-//			for(int y=0; y<input_num[0].length; y++)
-//				input_test[x][y] = input_num[x][y]; 
-//		for(int x=limit; x<input_num.length; x++)
-//			for(int y=0; y<input_num[0].length; y++)
-//				input_train[x-limit][y] = input_num[x][y]; 
+		int limit = (int) (input_num.length*TEST_SIZE);
+		System.out.println(input_num.length-limit+" exemplos para treinamento");
+		System.out.println(limit+" exemplos para teste");
+		int[][] input_train = new int[input_num.length-limit][1024];
+		int[][] input_test = new int[limit][1024];
+		String[] input_test_labels = new String[limit];
+		
+		for(int x=0; x<limit; x++)
+			for(int y=0; y<input_num[0].length; y++){
+				input_test[x][y] = input_num[x][y]; 
+				input_test_labels[x] = input_labels.get(x);
 
-		
-		
-/*		for(int x=0; x<input_train.length; x++) {
-			for(int y=0; y<input_train[0].length; y++) {
-				System.out.print(input_train[x][y]);
 			}
-			System.out.println();
-		}*/
+		for(int x=limit; x<input_num.length; x++)
+			for(int y=0; y<input_num[0].length; y++)
+				input_train[x-limit][y] = input_num[x][y]; 
+
 		
 
-		SOM_Class som = new SOM_Class(MAX_CLUSTERS, input_num);
-		som.train();
-		som.printResults();
-		/*som.Train(input_train, input_test);
-		som.Test(input_train, input_test);*/
-		
+		SOM_Class som = new SOM_Class(input_train, DIM_MATRIZ_NEURONIOS, MAX_EPOCAS, RAIO, TAXA_APRENDIZAGEM);
+		som.treinamento();
+		som.teste(input_test, input_test_labels);
+		//som.imprimeNeuronios();
+		som.escreveDesenhoNeurArquivo("arquivos/Rede.txt");
+		som.escreveMapaArquivo("arquivos/Mapa.txt");
 		
 
 	}
