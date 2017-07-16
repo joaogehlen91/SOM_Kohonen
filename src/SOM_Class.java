@@ -54,9 +54,10 @@ public class SOM_Class {
 	public void treinamento(String[] label){
 		double[] bmu = new double[1024];
 		double raio, taxaAp;
+		ProgressBar pb = new ProgressBar();
 		
 		for (int epoca = 1; epoca <= this.maxEpocas ; epoca++) {
-
+			pb.updateProgress((double)epoca/(double)this.maxEpocas);
 			raio = raio_vizinhanca(epoca);
 			System.out.println("Epoca: " + epoca + "/" + this.maxEpocas );
 			//System.out.println("Raio:"+ raio);
