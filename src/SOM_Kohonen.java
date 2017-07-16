@@ -13,15 +13,21 @@ import java.util.ArrayList;
 
 public class SOM_Kohonen {
 	
-	public static final int DIM_MATRIZ_NEURONIOS = 15;
-	public static final int MAX_EPOCAS = 10;
-	public static final double TEST_SIZE = 0.3;
-	public static final double TAXA_APRENDIZAGEM = 0.1;
-	public static final double RAIO = 0.5;
+	public static int DIM_MATRIZ_NEURONIOS = 15;
+	public static int MAX_EPOCAS = 10;
+	public static double TAXA_APRENDIZAGEM = 0.1;
+	public static double RAIO = 0.5;
+	public static double TEST_SIZE = 0.3;
 	
 	public static void main(String[] args) throws IOException {
 		
-		
+		if(args.length == 5){
+			DIM_MATRIZ_NEURONIOS = Integer.parseInt(args[0]);
+			MAX_EPOCAS = Integer.parseInt(args[1]);
+			TAXA_APRENDIZAGEM = Double.parseDouble(args[2]);
+			RAIO = Double.parseDouble(args[3]);
+			TEST_SIZE = Double.parseDouble(args[4]);
+		}
 
 		
 		ArrayList<ArrayList<Integer>> input = new ArrayList<ArrayList<Integer>>();

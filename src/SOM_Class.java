@@ -58,8 +58,8 @@ public class SOM_Class {
 		for (int epoca = 1; epoca <= this.maxEpocas ; epoca++) {
 
 			raio = raio_vizinhanca(epoca);
-			System.out.println("Epoca:"+ epoca);
-			System.out.println("Raio:"+ raio);
+			System.out.println("Epoca: " + epoca + "/" + this.maxEpocas );
+			//System.out.println("Raio:"+ raio);
 			//shuffleArray(trainSet);
 			taxaAp = this.taxa_aprendizado(epoca);
 
