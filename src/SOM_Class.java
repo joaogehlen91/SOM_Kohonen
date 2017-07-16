@@ -1,18 +1,16 @@
+/*
+ * Nomes: Elias Fank, João Gehlen, Ricardo Zanuzzo
+ * Disciplina: Inteligencia Artificial
+ * 
+ * 2017/1
+ * 
+ */
+
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
-import java.io.PrintWriter;
 
 public class SOM_Class {
 	private int trainSet[][];
@@ -22,7 +20,6 @@ public class SOM_Class {
 	private int acuracia[][];
 	private int dimMatNeuronios;
 	private int maxEpocas;
-	private double pesosNeuronios[];
 	private double constanteTemporal;
 	private double taxaAprendizadoInicial;
 	private double raioInicial;
@@ -44,7 +41,6 @@ public class SOM_Class {
 	}
 
 	private double[][][] criaMatrizQuadAleatorio(int dim) {
-		Random r = new Random();
 		double w[][][] = new double[dim][dim][1024];
 		for (int i = 0; i < w.length; i++) {
 			for (int j = 0; j < w[0].length; j++) {
@@ -57,7 +53,7 @@ public class SOM_Class {
 
 	public void treinamento(String[] label){
 		double[] bmu = new double[1024];
-		double delta, update, influencia_vizinhanca, raio, taxaAp;
+		double raio, taxaAp;
 		
 		for (int epoca = 1; epoca <= this.maxEpocas ; epoca++) {
 
@@ -72,23 +68,26 @@ public class SOM_Class {
 				bmu = mapa[this.melhorI][this.melhorJ];
 				mapaRotuladoTrain[this.melhorI][this.melhorJ] = label[x];
 
-
-				for(int i = 0; i< this.dimMatNeuronios; i++){
-					for(int j = 0; j< this.dimMatNeuronios; j++){
-						for(int k = 0; k< 1024; k++){
-							influencia_vizinhanca = this.influencia_vizinhanca(bmu, this.melhorI, this.melhorJ, i, j, raio);
-							delta = taxaAp * influencia_vizinhanca * (trainSet[x][k] - mapa[i][j][k]);
-							// System.out.println("Influencia:"+ influencia_vizinhanca);
-							mapa[i][j][k] += delta;
-						}
-					}
-				}
-
+				atualiza_pesos(x, bmu, taxaAp, raio);
 			}
 			
 		}
 
 	}
+	
+	public void atualiza_pesos(int x, double[] bmu, double taxaAp, double raio){
+		double delta, influencia_vizinhanca;
+		for(int i = 0; i< this.dimMatNeuronios; i++){
+			for(int j = 0; j< this.dimMatNeuronios; j++){
+				for(int k = 0; k< 1024; k++){
+					influencia_vizinhanca = this.influencia_vizinhanca(bmu, this.melhorI, this.melhorJ, i, j, raio);
+					delta = taxaAp * influencia_vizinhanca * (trainSet[x][k] - mapa[i][j][k]);
+					mapa[i][j][k] += delta;
+				}
+			}
+		}
+	}
+	
 
 	public void teste(int test_set[][], String labels[]){
 		for(int i=0;i<test_set.length;i++){
@@ -100,9 +99,7 @@ public class SOM_Class {
 			}else{
 				this.acuracia[1][n] += 1;
 			}
-			
 		}
-
 	}
 
 	static void shuffleArray(int[][] ar){
@@ -135,7 +132,6 @@ public class SOM_Class {
 			aux[i] = (double) data[i];
 		}
 		
-		double[] bmu = new double[1024];
 		double min = Double.MAX_VALUE;
 		double dist;
 		
@@ -160,7 +156,6 @@ public class SOM_Class {
 			dist+=Math.pow(a[i]-b[i],2);
 		}
 		return Math.sqrt(dist);
-
 	}
 
 	public void imprimeNeuronios(){
@@ -169,7 +164,6 @@ public class SOM_Class {
 				System.out.println();
 				imprimeNeuronio(i,j);
 			}
-			
 	}
 
 	public void imprimeNeuronio(int i, int j) {
@@ -212,10 +206,13 @@ public class SOM_Class {
 					writer.print(". ");
 				else
 					writer.print(mapaRotulado[i][j]+" ");
-
 				}
 				writer.println();
 			}
+		
+		writer.println("\n");
+		imprimeAcuracia(arquivo, writer);
+	
 		writer.close();
 	}
 	
@@ -228,26 +225,24 @@ public class SOM_Class {
 		}
 	}
 	
-	public void imprimeAcuracia(){
+	public void imprimeAcuracia(String arquivo, PrintWriter writer){
 		double acumAcerto = 0;
 		double acumErro = 0;
 		
-		System.out.println("Acuracia por cluster:");
+		writer.println("Acuracia por cluster:");
 		for (int i = 0; i < 10; i++) {
 			double pAcerto = (double)acuracia[0][i] / (double)(acuracia[0][i] + acuracia[1][i]);
 			acumAcerto += (double)acuracia[0][i];
 			acumErro += (double)acuracia[1][i];
 			
 			//System.out.println("% acertos do numero " + i +": " + ((double)Math.round(pAcerto * 100.0) / 100.0) *100.0);
-			System.out.println("% acertos do numero " + i +": " + pAcerto * 100.0);
-			
+			writer.println("% acertos do numero " + i +": " + pAcerto * 100.0);
 			
 		}
 		double acuracia = acumAcerto / (acumAcerto + acumErro);
-		System.out.print("Acuracia da Rede: ");
+		writer.print("Acuracia da Rede: ");
 		//System.out.println(( (double)Math.round(acuracia * 100.0) / 100.0) * 100.0);
-		System.out.println(acuracia * 100.0);
+		writer.println(acuracia * 100.0);
 	}
 		
-
 }

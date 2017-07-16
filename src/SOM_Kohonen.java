@@ -1,3 +1,11 @@
+/*
+ * Nomes: Elias Fank, João Gehlen, Ricardo Zanuzzo
+ * Disciplina: Inteligencia Artificial
+ * 
+ * 2017/1
+ * 
+ */
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -5,13 +13,16 @@ import java.util.ArrayList;
 
 public class SOM_Kohonen {
 	
-	public static final int DIM_MATRIZ_NEURONIOS = 10;
-	public static final int MAX_EPOCAS = 100;
+	public static final int DIM_MATRIZ_NEURONIOS = 15;
+	public static final int MAX_EPOCAS = 10;
 	public static final double TEST_SIZE = 0.3;
 	public static final double TAXA_APRENDIZAGEM = 0.1;
 	public static final double RAIO = 0.5;
 	
 	public static void main(String[] args) throws IOException {
+		
+		
+
 		
 		ArrayList<ArrayList<Integer>> input = new ArrayList<ArrayList<Integer>>();
 		ArrayList<String> input_labels = new ArrayList<String>();
@@ -80,8 +91,7 @@ public class SOM_Kohonen {
 		//som.imprimeNeuronios();
 		som.escreveDesenhoNeurArquivo("arquivos/Rede.txt");
 		som.escreveMapaArquivo("arquivos/Mapa.txt");
-		som.imprimeMapaRotuladoTrain();
-		som.imprimeAcuracia();
+		//som.imprimeMapaRotuladoTrain();
 
 	}
 
