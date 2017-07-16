@@ -18,6 +18,8 @@ public class SOM_Class {
 	private int trainSet[][];
 	private double mapa[][][];
 	private String mapaRotulado[][];
+	private String mapaRotuladoTrain[][];
+	private int acuracia[][];
 	private int dimMatNeuronios;
 	private int maxEpocas;
 	private double pesosNeuronios[];
@@ -31,11 +33,13 @@ public class SOM_Class {
 		this.taxaAprendizadoInicial = taxa;
 		this.raioInicial = raioInicial;
 		this.dimMatNeuronios = dim;
+		this.acuracia = new int[2][10];
 		this.trainSet = input_set;
 		this.mapa = criaMatrizQuadAleatorio(this.dimMatNeuronios);
 		this.maxEpocas = qtEpocas;
 		this.constanteTemporal = (double)(this.maxEpocas/Math.log(Math.pow(this.dimMatNeuronios,2)/2));
 		this.mapaRotulado = new String[dim][dim];
+		this.mapaRotuladoTrain = new String[dim][dim];
 		return;
 	}
 
@@ -51,21 +55,22 @@ public class SOM_Class {
 		return w;
 	}
 
-	public void treinamento(){
+	public void treinamento(String[] label){
 		double[] bmu = new double[1024];
 		double delta, update, influencia_vizinhanca, raio, taxaAp;
 		
-		for (int epoca = 0; epoca < this.maxEpocas ; epoca++) {
+		for (int epoca = 1; epoca <= this.maxEpocas ; epoca++) {
 
 			raio = raio_vizinhanca(epoca);
-			System.out.println("Epoca:"+ epoca+1);
+			System.out.println("Epoca:"+ epoca);
 			System.out.println("Raio:"+ raio);
-			shuffleArray(trainSet);
+			//shuffleArray(trainSet);
 			taxaAp = this.taxa_aprendizado(epoca);
 
 			for (int x = 0; x < trainSet.length; x++) {
 				maisProx(trainSet[x]);
 				bmu = mapa[this.melhorI][this.melhorJ];
+				mapaRotuladoTrain[this.melhorI][this.melhorJ] = label[x];
 
 
 				for(int i = 0; i< this.dimMatNeuronios; i++){
@@ -89,6 +94,13 @@ public class SOM_Class {
 		for(int i=0;i<test_set.length;i++){
 			maisProx(test_set[i]);
 			mapaRotulado[this.melhorI][this.melhorJ] = labels[i];
+			int n = Integer.parseInt(labels[i]);
+			if(labels[i].equals(mapaRotuladoTrain[this.melhorI][this.melhorJ])){
+				this.acuracia[0][n] += 1;
+			}else{
+				this.acuracia[1][n] += 1;
+			}
+			
 		}
 
 	}
@@ -206,5 +218,36 @@ public class SOM_Class {
 			}
 		writer.close();
 	}
+	
+	public void imprimeMapaRotuladoTrain(){
+		for (int i = 0; i < this.dimMatNeuronios; i++) {
+			for (int j = 0; j < this.dimMatNeuronios; j++) {
+				System.out.print(mapaRotuladoTrain[i][j]);
+			}
+			System.out.println();
+		}
+	}
+	
+	public void imprimeAcuracia(){
+		double acumAcerto = 0;
+		double acumErro = 0;
+		
+		System.out.println("Acuracia por cluster:");
+		for (int i = 0; i < 10; i++) {
+			double pAcerto = (double)acuracia[0][i] / (double)(acuracia[0][i] + acuracia[1][i]);
+			acumAcerto += (double)acuracia[0][i];
+			acumErro += (double)acuracia[1][i];
+			
+			//System.out.println("% acertos do numero " + i +": " + ((double)Math.round(pAcerto * 100.0) / 100.0) *100.0);
+			System.out.println("% acertos do numero " + i +": " + pAcerto * 100.0);
+			
+			
+		}
+		double acuracia = acumAcerto / (acumAcerto + acumErro);
+		System.out.print("Acuracia da Rede: ");
+		//System.out.println(( (double)Math.round(acuracia * 100.0) / 100.0) * 100.0);
+		System.out.println(acuracia * 100.0);
+	}
+		
 
 }

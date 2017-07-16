@@ -5,11 +5,11 @@ import java.util.ArrayList;
 
 public class SOM_Kohonen {
 	
-	public static final int DIM_MATRIZ_NEURONIOS = 15;
-	public static final int MAX_EPOCAS = 20;
-	public static final double TEST_SIZE = 0.2;
+	public static final int DIM_MATRIZ_NEURONIOS = 10;
+	public static final int MAX_EPOCAS = 100;
+	public static final double TEST_SIZE = 0.3;
 	public static final double TAXA_APRENDIZAGEM = 0.1;
-	public static final double RAIO = 0.9;
+	public static final double RAIO = 0.5;
 	
 	public static void main(String[] args) throws IOException {
 		
@@ -56,6 +56,7 @@ public class SOM_Kohonen {
 		System.out.println(input_num.length-limit+" exemplos para treinamento");
 		System.out.println(limit+" exemplos para teste");
 		int[][] input_train = new int[input_num.length-limit][1024];
+		String[] input_train_labels = new String[input_num.length-limit];
 		int[][] input_test = new int[limit][1024];
 		String[] input_test_labels = new String[limit];
 		
@@ -66,18 +67,21 @@ public class SOM_Kohonen {
 
 			}
 		for(int x=limit; x<input_num.length; x++)
-			for(int y=0; y<input_num[0].length; y++)
-				input_train[x-limit][y] = input_num[x][y]; 
+			for(int y=0; y<input_num[0].length; y++){
+				input_train[x-limit][y] = input_num[x][y];
+				input_train_labels[x-limit] = input_labels.get(x);
+			}
 
 		
 
 		SOM_Class som = new SOM_Class(input_train, DIM_MATRIZ_NEURONIOS, MAX_EPOCAS, RAIO, TAXA_APRENDIZAGEM);
-		som.treinamento();
+		som.treinamento(input_train_labels);
 		som.teste(input_test, input_test_labels);
 		//som.imprimeNeuronios();
 		som.escreveDesenhoNeurArquivo("arquivos/Rede.txt");
 		som.escreveMapaArquivo("arquivos/Mapa.txt");
-		
+		som.imprimeMapaRotuladoTrain();
+		som.imprimeAcuracia();
 
 	}
 
