@@ -14,7 +14,7 @@ public class ProgressBar {
                       TimeUnit.MILLISECONDS.toMinutes(eta) % TimeUnit.HOURS.toMinutes(1),
                       TimeUnit.MILLISECONDS.toSeconds(eta) % TimeUnit.MINUTES.toSeconds(1));
 
-      StringBuilder string = new StringBuilder(140);   
+      StringBuilder string = new StringBuilder(80);   
       int percent = (int) (current * 100 / total);
       string
           .append('\r')
