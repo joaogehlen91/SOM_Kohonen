@@ -70,6 +70,7 @@ public class SOM_Kohonen {
 		}
 		
 		int limit = (int) (input_num.length*TEST_SIZE);
+		System.out.println();
 		System.out.println(input_num.length-limit+" exemplos para treinamento");
 		System.out.println(limit+" exemplos para teste");
 		int[][] input_train = new int[input_num.length-limit][1024];
@@ -96,7 +97,9 @@ public class SOM_Kohonen {
 		som.teste(input_test, input_test_labels);
 		//som.imprimeNeuronios();
 		som.escreveDesenhoNeurArquivo("arquivos/Rede.txt");
+		System.out.println("\n\nO Mapa de neurônios com seus respectivos desenhos foi escrito no arquivo arquivos/Rede.txt");
 		som.escreveMapaArquivo("arquivos/Mapa.txt");
+		System.out.println("O Mapa de neurônios, a acurácia da rede e a acurácia da rede por cluster foi salvo no arquivo arquivos/Mapa.txt\n");
 		//som.imprimeMapaRotuladoTrain();
 
 	}

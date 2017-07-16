@@ -1,24 +1,25 @@
-6 6 6 6 4 4 4 1 1 1 
-. 6 . 6 4 4 9 1 1 1 
-0 0 0 . 4 4 8 8 8 1 
-0 0 . . 4 8 8 8 8 1 
-0 0 0 5 . 8 8 8 8 2 
-5 0 . 5 5 8 8 2 2 2 
-9 9 5 5 5 5 8 8 2 2 
-7 9 . 5 5 5 8 3 1 9 
-7 7 8 3 3 3 3 3 9 5 
-7 7 7 7 3 3 3 3 9 9 
+MAPA DA REDE
+Uma posição com um . significa um neurônio que não foi excitado.
+###################
+## 4 4 6 6 6 0 0 ##
+## 1 4 6 6 6 0 0 ##
+## 1 1 8 8 8 2 2 ##
+## 1 8 8 8 3 3 2 ##
+## 7 8 5 5 3 3 2 ##
+## 7 . 9 5 5 3 3 ##
+## 7 7 7 9 5 9 9 ##
+###################
 
-
+ACURÁCIA
 Acuracia por cluster:
-% acertos do numero 0: 94.23076923076923
-% acertos do numero 1: 70.49180327868852
-% acertos do numero 2: 98.27586206896551
-% acertos do numero 3: 83.33333333333334
-% acertos do numero 4: 81.25
-% acertos do numero 5: 88.13559322033898
+% acertos do numero 0: 98.07692307692307
+% acertos do numero 1: 85.24590163934425
+% acertos do numero 2: 100.0
+% acertos do numero 3: 87.03703703703704
+% acertos do numero 4: 87.5
+% acertos do numero 5: 57.6271186440678
 % acertos do numero 6: 100.0
-% acertos do numero 7: 98.36065573770492
-% acertos do numero 8: 87.5
-% acertos do numero 9: 67.74193548387096
-Acuracia da Rede: 86.55172413793103
+% acertos do numero 7: 96.72131147540983
+% acertos do numero 8: 91.07142857142857
+% acertos do numero 9: 66.12903225806451
+Acuracia da Rede: 86.55172413793103%

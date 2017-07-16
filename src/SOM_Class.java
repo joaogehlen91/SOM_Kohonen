@@ -54,12 +54,12 @@ public class SOM_Class {
 	public void treinamento(String[] label){
 		double[] bmu = new double[1024];
 		double raio, taxaAp;
-		ProgressBar pb = new ProgressBar();
+		ProgressBar pb = new ProgressBar(System.currentTimeMillis());
+		System.out.println("\nPROGRESSO DE TREINAMENTO");
 		
 		for (int epoca = 1; epoca <= this.maxEpocas ; epoca++) {
-			pb.updateProgress((double)epoca/(double)this.maxEpocas);
+			pb.printProgress(this.maxEpocas, epoca);
 			raio = raio_vizinhanca(epoca);
-			System.out.println("Epoca: " + epoca + "/" + this.maxEpocas );
 			//System.out.println("Raio:"+ raio);
 			//shuffleArray(trainSet);
 			taxaAp = this.taxa_aprendizado(epoca);
@@ -199,18 +199,23 @@ public class SOM_Class {
 	public void escreveMapaArquivo(String arquivo)throws FileNotFoundException, UnsupportedEncodingException{
 		PrintWriter writer;
 		writer = new PrintWriter(arquivo, "UTF-8");
-
+		writer.println("MAPA DA REDE");
+		writer.println("Uma posição com um . significa um neurônio que não foi excitado.");
+		for (int i=0; i<=(this.dimMatNeuronios*2)+4;i++) writer.print("#");
+			writer.println();
 		for (int i=0;i<this.dimMatNeuronios;i++){
+			writer.print("## ");
 			for (int j=0;j<this.dimMatNeuronios;j++){
 
 				if(mapaRotulado[i][j] == null)
 					writer.print(". ");
 				else
 					writer.print(mapaRotulado[i][j]+" ");
-				}
-				writer.println();
 			}
-		
+			writer.print("##");
+			writer.println();
+		}
+		for (int i=0; i<=(this.dimMatNeuronios*2)+4;i++) writer.print("#");
 		writer.println("\n");
 		imprimeAcuracia(arquivo, writer);
 	
@@ -229,7 +234,7 @@ public class SOM_Class {
 	public void imprimeAcuracia(String arquivo, PrintWriter writer){
 		double acumAcerto = 0;
 		double acumErro = 0;
-		
+		writer.println("ACURÁCIA");
 		writer.println("Acuracia por cluster:");
 		for (int i = 0; i < 10; i++) {
 			double pAcerto = (double)acuracia[0][i] / (double)(acuracia[0][i] + acuracia[1][i]);
@@ -243,7 +248,7 @@ public class SOM_Class {
 		double acuracia = acumAcerto / (acumAcerto + acumErro);
 		writer.print("Acuracia da Rede: ");
 		//System.out.println(( (double)Math.round(acuracia * 100.0) / 100.0) * 100.0);
-		writer.println(acuracia * 100.0);
+		writer.println(acuracia * 100.0 + "%");
 	}
 		
 }
