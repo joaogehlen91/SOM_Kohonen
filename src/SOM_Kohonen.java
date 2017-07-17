@@ -15,7 +15,7 @@ import java.util.Collections;
 public class SOM_Kohonen {
 	
 	public static int DIM_MATRIZ_NEURONIOS = 15;
-	public static int MAX_EPOCAS = 10;
+	public static int MAX_EPOCAS = 20;
 	public static double TAXA_APRENDIZAGEM = 0.1;
 	public static double RAIO = 0.5;
 	public static double TEST_SIZE = 0.3;
@@ -28,6 +28,14 @@ public class SOM_Kohonen {
 			TAXA_APRENDIZAGEM = Double.parseDouble(args[2]);
 			RAIO = Double.parseDouble(args[3]);
 			TEST_SIZE = Double.parseDouble(args[4]);
+		}else{
+			System.out.println("\nVocê executou o programa sem os argumentos, os seguintes serão utilizados:");
+			System.out.println("Dimensão da matriz de neurônios: "+DIM_MATRIZ_NEURONIOS);
+			System.out.println("Quantidade de Epocas: "+MAX_EPOCAS);
+			System.out.println("Taxa de aprendizagem: "+TAXA_APRENDIZAGEM);
+			System.out.println("Raio de influência: "+RAIO);
+			System.out.println("Porcentagem do arquivo utilizado para teste: "+TEST_SIZE);
+			System.out.println();
 		}
 
 		
