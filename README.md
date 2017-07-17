@@ -26,3 +26,9 @@ E \<test_size> percentual dos valores de entrada que serão usados para o teste 
   $ make run 10 20 0.1 0.5 0.3
 ```
 Nessa execução vai gerar matriz de neurônios de 10x10, com 20 treinamentos, taxa de aprendizagem do treinamento de 0.1, com raio inicial de 50% da matriz de neurônios e 30%  da entrada usada para validação.
+
+### Exemplo de execução padrão:
+```sh
+  $ make run
+```
+Nessa execução o programa vai utilizar valores padrões.
