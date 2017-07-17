@@ -61,11 +61,11 @@ public class SOM_Class {
 			pb.printProgress(this.maxEpocas, epoca);
 			raio = raio_vizinhanca(epoca);
 			//System.out.println("Raio:"+ raio);
-			//shuffleArray(trainSet);
+			//shuffleArray(this.trainSet);
 			taxaAp = this.taxa_aprendizado(epoca);
 
-			for (int x = 0; x < trainSet.length; x++) {
-				maisProx(trainSet[x]);
+			for (int x = 0; x < this.trainSet.length; x++) {
+				maisProx(this.trainSet[x]);
 				bmu = mapa[this.melhorI][this.melhorJ];
 				mapaRotuladoTrain[this.melhorI][this.melhorJ] = label[x];
 
@@ -82,7 +82,7 @@ public class SOM_Class {
 			for(int j = 0; j< this.dimMatNeuronios; j++){
 				for(int k = 0; k< 1024; k++){
 					influencia_vizinhanca = this.influencia_vizinhanca(bmu, this.melhorI, this.melhorJ, i, j, raio);
-					delta = taxaAp * influencia_vizinhanca * (trainSet[x][k] - mapa[i][j][k]);
+					delta = taxaAp * influencia_vizinhanca * (this.trainSet[x][k] - mapa[i][j][k]);
 					mapa[i][j][k] += delta;
 				}
 			}
@@ -120,11 +120,11 @@ public class SOM_Class {
 
 	private double raio_vizinhanca( int epoca) {
 		double qtNeuronios = (double)(this.dimMatNeuronios*this.dimMatNeuronios);
-		return qtNeuronios * this.raioInicial * Math.exp(-(double)(epoca+1) / this.lambda);
+		return qtNeuronios * this.raioInicial * Math.exp(-(double)epoca / this.lambda);
 	}
 	
 	private double taxa_aprendizado(int epoca) {
-		return Math.exp(-(double)epoca / (double)this.maxEpocas) * this.taxaAprendizadoInicial;
+		return this.taxaAprendizadoInicial * (Math.exp(-(double)epoca / (double)this.maxEpocas)) ;
 	}
 
 	private void maisProx(int[] data) {
