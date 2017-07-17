@@ -20,7 +20,7 @@ public class SOM_Class {
 	private int acuracia[][];
 	private int dimMatNeuronios;
 	private int maxEpocas;
-	private double constanteTemporal;
+	private double lambda;
 	private double taxaAprendizadoInicial;
 	private double raioInicial;
 	private int melhorI, melhorJ;
@@ -34,7 +34,7 @@ public class SOM_Class {
 		this.trainSet = input_set;
 		this.mapa = criaMatrizQuadAleatorio(this.dimMatNeuronios);
 		this.maxEpocas = qtEpocas;
-		this.constanteTemporal = (double)(this.maxEpocas/Math.log(Math.pow(this.dimMatNeuronios,2)/2));
+		this.lambda = (double)(this.maxEpocas/Math.log(Math.pow(this.dimMatNeuronios,2)/2));
 		this.mapaRotulado = new String[dim][dim];
 		this.mapaRotuladoTrain = new String[dim][dim];
 		return;
@@ -120,7 +120,7 @@ public class SOM_Class {
 
 	private double raio_vizinhanca( int epoca) {
 		double qtNeuronios = (double)(this.dimMatNeuronios*this.dimMatNeuronios);
-		return qtNeuronios * this.raioInicial * Math.exp(-(double)(epoca+1) / this.constanteTemporal);
+		return qtNeuronios * this.raioInicial * Math.exp(-(double)(epoca+1) / this.lambda);
 	}
 	
 	private double taxa_aprendizado(int epoca) {
