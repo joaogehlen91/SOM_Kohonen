@@ -112,21 +112,29 @@ public class SOM_Class {
 			ar[i] = a;
 		}
 	}
-
+	
+	// A taxa de influência mostra a quantidade de influência que a distância de um nodo da BMU tem em sua aprendizagem. 
+	// À medida que o treinamento continua, a vizinhança gradualmente diminui. 
+	// No final do treinamento, a vizinhança diminui para o tamanho zero .
 	private double influencia_vizinhanca(double[] bmu, int i, int j, int x, int y, double raio_vizinhanca) {
 		double distance = Math.sqrt(Math.pow(i-x, 2) + Math.pow(j-y, 2));
 		return Math.exp(-Math.pow(distance, 2) / (2 * Math.pow(raio_vizinhanca, 2)));
 	}
 
+	// Calcula o tamanho da vizinhança em torno do BMU. 
+	// A vizinhança ao redor do BMU está diminuindo com uma função de decremento exponencial. 
+	// Ela diminui em cada iteração até atingir apenas o BMU.
 	private double raio_vizinhanca( int epoca) {
 		double qtNeuronios = (double)(this.dimMatNeuronios*this.dimMatNeuronios);
 		return qtNeuronios * this.raioInicial * Math.exp(-(double)epoca / this.lambda);
 	}
 	
+	// O decremento na taxa de aprendizado é calculada para cada iteração.
 	private double taxa_aprendizado(int epoca) {
 		return this.taxaAprendizadoInicial * (Math.exp(-(double)epoca / (double)this.maxEpocas)) ;
 	}
 
+	// Calcula o Best Matching Unit (BMU). Cada nó é examinado para encontrar os pesos que são mais parecidos com o vetor de entrada. 
 	private void maisProx(int[] data) {
 		double[] aux = new double[1024];
 		for(int i=0;i<1024;i++){
@@ -150,7 +158,8 @@ public class SOM_Class {
 				
 	}
 
-
+	// Calculo da distância euclidiana, que é uma medida de similaridade entre dois conjuntos de dados. 
+	// A distância entre o vetor de entrada e os pesos do nó é calculada para encontrar o BMU.
 	private double distancia(double[] a, double[] b){
 		double dist=0;
 		for (int i = 0; i < a.length; i++){
