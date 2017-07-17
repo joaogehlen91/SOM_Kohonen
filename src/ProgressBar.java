@@ -25,7 +25,7 @@ public class ProgressBar {
           .append(String.join("", Collections.nCopies(100 - percent, " ")))
           .append(']')
           .append(String.join("", Collections.nCopies((int) (Math.log10(total)) - (int) (Math.log10(current)), " ")))
-          .append(String.format("Epoca %d/%d, ETA: %s", current, total, etaHms));
+          .append(String.format("%s %d/%d, ETA: %s", "Ep.", current, total, etaHms));
 
       System.out.print(string);
   }
