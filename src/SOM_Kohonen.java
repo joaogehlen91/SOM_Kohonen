@@ -10,6 +10,7 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SOM_Kohonen {
 	
@@ -30,7 +31,7 @@ public class SOM_Kohonen {
 		}
 
 		
-		ArrayList<ArrayList<Integer>> input = new ArrayList<ArrayList<Integer>>();
+		ArrayList<ArrayList<Integer>> input_data = new ArrayList<ArrayList<Integer>>();
 		ArrayList<String> input_labels = new ArrayList<String>();
 		String fileName = "arquivos/training";
 		BufferedReader br = new BufferedReader(new FileReader(fileName));
@@ -49,17 +50,38 @@ public class SOM_Kohonen {
 				for (String s : numero.split("")) {
 					num.add(Integer.parseInt(s));
 				}
-				input.add(num);
+				input_data.add(num);
 				numero = "";
 			}
 		}
 		
 		br.close();
+
+		ArrayList<ArrayList<Integer>> sort_input_data = new ArrayList<ArrayList<Integer>>();
+		ArrayList<String> sort_input_labels = new ArrayList<String>();
+		ArrayList<Integer> sortIndex = new ArrayList<Integer>();
+		for (int i=0; i<input_data.size();i++) sortIndex.add(i);
+		Collections.shuffle(sortIndex);
+		for(int i=0; i<input_data.size(); i++){
+			sort_input_data.add(input_data.get(sortIndex.get(i)));
+			sort_input_labels.add(input_labels.get(sortIndex.get(i)));
+		}
+
+
+/*		for(int i=0; i<input_data.size(); i++){
+			for(int j=0; j<1024; j++){
+				if(j%32==0) System.out.println();
+				System.out.print(sort_input_data.get(i).get(j));
+			}
+			System.out.println(sort_input_labels.get(i));
+		}*/
+
+
 		
 		
 		int i = 0;
-		int[][] input_num = new int[input.size()][input.get(0).size()];
-		for (ArrayList<Integer> integers : input) {
+		int[][] input_num = new int[sort_input_data.size()][sort_input_data.get(0).size()];
+		for (ArrayList<Integer> integers : sort_input_data) {
 			int j = 0;
 			for (Integer integer : integers) {
 				input_num[i][j] = integer;
@@ -81,13 +103,13 @@ public class SOM_Kohonen {
 		for(int x=0; x<limit; x++)
 			for(int y=0; y<input_num[0].length; y++){
 				input_test[x][y] = input_num[x][y]; 
-				input_test_labels[x] = input_labels.get(x);
+				input_test_labels[x] = sort_input_labels.get(x);
 
 			}
 		for(int x=limit; x<input_num.length; x++)
 			for(int y=0; y<input_num[0].length; y++){
 				input_train[x-limit][y] = input_num[x][y];
-				input_train_labels[x-limit] = input_labels.get(x);
+				input_train_labels[x-limit] = sort_input_labels.get(x);
 			}
 
 		
